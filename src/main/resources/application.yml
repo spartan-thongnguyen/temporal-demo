@@ -1,0 +1,29 @@
+# Video, Part 2 · Worker: "mostly configuration".
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: temporal-checkout
+  temporal:
+    connection:
+      target: ${TEMPORAL_ADDRESS:127.0.0.1:7233}
+    namespace: default
+    workers-auto-discovery:
+      packages:
+        - checkout
+
+# The fake payment provider, inventory and carrier keep their state here,
+# so it survives when you kill the app (like a real external system would).
+checkout:
+  world-file: data/world.json
+
+logging:
+  # Short stack traces keep the demo console readable. Delete this line to see full traces.
+  exception-conversion-word: "%ex{short}"
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %msg%n"
+  level:
+    root: WARN
+    checkout: INFO
+    org.springframework.boot.web.embedded.tomcat: INFO
